@@ -13,7 +13,7 @@ Haystacker follows a three-step process:
 3. **Aggregate**: stitch the results of all the query invocations into one output file
 
 ## How to use
-You must be on a linux machine with `gcloud` installed, and be running under a gcloud configuration which has sufficient credentials to query logs for the project you're interested in.
+You must be on a linux machine with `gcloud` installed, and be running under a gcloud configuration which has sufficient permission to query logs for the project you're interested in.
 
 ### 1. Plan
 This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several parameters are required[1]:
