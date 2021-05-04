@@ -15,9 +15,8 @@ Haystacker follows a three-step process:
 ## How to use
 You must be on a linux machine with `gcloud` installed, and be running under a gcloud configuration which has sufficient permission to query logs for the project you're interested in.
 
-### 1. Plan
-This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several parameters are required[1]:
-* `mode`: set this to 'plan'
+### Step 1: `--mode=plan`
+This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several additional parameters are required[1]:
 * `query`:  the Cloud Logging query to run; enclose in *single quotes*. **Do not include date parameters here.**
 * `interval_in_hours` (default=24): how much time should be included in each query command. 
 
@@ -33,8 +32,8 @@ This step creates several files in `queries_to_run`, each of which contains one 
     --query='"gk3-autopilot-cluster-1-nap-1rsk2zoy-e7036ee3-r4rg" AND severity=WARNING'
 ```
 
-### 2. Query
-To execute the queries, only one parameter is needed:
+### Step 2: `--mode=query`
+To execute the queries, only one additional parameter is needed:
 * `threads` (default=4): the number of threads to use. Each thread spawns a separate query segment in parallel. As each query completes, its output is written to a file in `matches` and the file in `queries_to_run` is deleted. 
 
     > Due to the large amount of time spent waiting for API calls to return, you should be able to set this value pretty high, even on a machine with few cores, without crashing. Experiment until you find a good balance.
@@ -46,7 +45,7 @@ To execute the queries, only one parameter is needed:
 ./haystacker.sh --mode=query --threads=16
 ```
 
-### 3. Aggregate
+### Step 3: `--mode=aggregate`
 This step collects all the individual outputs from `matches` and concatenates them into a single results file, while deleting the individual result files. It takes no parameters. It creates a file named `merged_results_<timestamp>.txt`
 
 **Example:**
