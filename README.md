@@ -46,7 +46,7 @@ To execute the queries, only one additional parameter is needed:
 ```
 
 ### Step 3: `--mode=aggregate`
-This step collects all the individual outputs from `matches` and concatenates them into a single results file, while deleting the individual result files. It takes no parameters. It creates a file named `merged_results_<timestamp>.txt`
+This step collects all the individual outputs from `matches` and concatenates them into a single results file, while deleting the individual result files. It takes no additional parameters. It creates a file named `merged_results_<timestamp>.txt`
 
 **Example:**
 ```sh
