@@ -18,7 +18,7 @@ You must be on a linux machine with `gcloud` installed, and be running under a g
 ### 1. Plan
 This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several parameters are required[1]:
 * `mode`: set this to 'plan'
-* `query`:  # the Cloud Logging query to run; enclose in *single quotes*. **Do not include restrictions here**
+* `query`:  the Cloud Logging query to run; enclose in *single quotes*. **Do not include restrictions here**
 * `interval_in_hours` (default=24): how much time should be included in each query command. Larger values require fewer API calls; smaller values may cause individual results outputs to be problematically large. Experiment until you find a good balance.
 * `start_date`: the date to begin querying, in 'YYYY-MM-DD' format. Dates are understood to be UTC.
 * `end_date`: the date to end querying (inclusive).
