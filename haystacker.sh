@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # parse command-line options
-OPTS=`getopt -o "m:t:i:s:e:" --long "mode:,threads:,interval_in_hours:,start_date:,end_date:" -n 'parse-options' -- "$@"`
+OPTS=`getopt -o "m:q:t:i:s:e:" --long "mode:,query:,threads:,interval_in_hours:,start_date:,end_date:" -n 'parse-options' -- "$@"`
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -15,11 +15,13 @@ DATE_END="2021-04-27"
 INCREMENT_IN_HOURS=1
 INCREMENT_IN_SECONDS=$((INCREMENT_IN_HOURS*3600))
 THREADS=4
+QUERY_STRING='"gk3-autopilot-cluster-1-nap-1rsk2zoy-e7036ee3-r4rg" AND severity=WARNING'
 
 # parse options into values
 while true; do
     case "$1" in
         -m | --mode ) MODE="$2"; shift; shift ;;
+        -q | --query ) QUERY_STRING="$2"; shift; shift ;;
         -t | --threads ) THREADS="$2"; shift; shift ;;
         -i | --interval_in_hours ) INCREMENT_IN_HOURS="$2"; shift; shift ;;
         -s | --start_date ) DATE_START="$2"; shift; shift ;;
@@ -34,7 +36,6 @@ function utc_time () {
 }
 
 function plan () {
-    # DEV ONLY
     rm -rf matches/*
     rm -rf queries_to_run/*
 
@@ -55,7 +56,7 @@ function plan () {
         QUERY_START_UTC=$(utc_time @${TIMESTAMP_QUERY_START})
         QUERY_END_UTC=$(utc_time @${QUERY_END_MINUS_ONE})
 
-        this_query="gcloud logging read 'timestamp >= \"${QUERY_START_UTC}\" AND timestamp < \"${QUERY_END_UTC}\" AND \"gk3-autopilot-cluster-1-nap-1rsk2zoy-e7036ee3-r4rg\" AND severity=WARNING' > matches/${TIMESTAMP_QUERY_START}.txt && rm queries_to_run/${TIMESTAMP_QUERY_START}.txt"
+        this_query="gcloud logging read 'timestamp >= \"${QUERY_START_UTC}\" AND timestamp < \"${QUERY_END_UTC}\" AND ${QUERY_STRING}' > matches/${TIMESTAMP_QUERY_START}.txt && rm queries_to_run/${TIMESTAMP_QUERY_START}.txt"
         echo $this_query > queries_to_run/${TIMESTAMP_QUERY_START}.txt
 
         TIMESTAMP_QUERY_START=$TIMESTAMP_QUERY_END
@@ -78,7 +79,7 @@ function aggregate () {
         echo "pleae run \"./haystacker.sh --mode=query --threads={threads}\""
         exit 1
     elif [[ $(find matches -name '*.txt') ]]; then
-        echo "aggregating results to file: matches/merged_results_$(date '+%s').txt"
+        echo "aggregating results to file: merged_results_$(date '+%s').txt"
         cat matches/*.txt > merged_results_$(date '+%s').txt
         rm matches/*.txt
     else
