@@ -16,7 +16,7 @@ Haystacker follows a three-step process:
 You must be on a linux machine with `gcloud` installed, and be running under a gcloud configuration which has sufficient permission to query logs for the project you're interested in.
 
 ### Step 1: `--mode=plan`
-This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several additional parameters are required[1]:
+This step creates several files in `queries_to_run`, each of which contains one segment of the overall query scope. Several additional parameters are required:
 * `query`:  the Cloud Logging query to run; enclose in *single quotes*. **Do not include date parameters here.**
 * `interval_in_hours` (default=24): how much time should be included in each query command. 
 
@@ -52,7 +52,3 @@ This step collects all the individual outputs from `matches` and concatenates th
 ```sh
 ./haystacker.sh --mode=aggregate
 ```
-
-
-
-[1] TODO: remove default values and error on unspecified inputs
